@@ -2,7 +2,9 @@
 
 # Enable colors and change prompt:
 autoload -U colors && colors	# Load colors
-PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+[ "$(uname -o)" != "Android" ] \
+	&& PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b " \
+	|| PS1="%B%{$fg[red]%}[%{$fg[yellow]%}${USER:-$USERNAME}%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
 setopt autocd		# Automatically cd into typed directory.
 stty stop undef		# Disable ctrl-s to freeze terminal.
 setopt interactive_comments
@@ -78,5 +80,55 @@ bindkey -M vicmd '^[[P' vi-delete-char
 bindkey -M vicmd '^e' edit-command-line
 bindkey -M visual '^[[P' vi-delete
 
+# LARBS dwm binds in tty.
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	bindkey -s '^[`' '^udmenuunicode\n'
+	bindkey -s '^[-' '^uwpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-\n'
+	bindkey -s '^[_' '^uwpctl set-volume @DEFAULT_AUDIO_SINK@ 15%-\n'
+	bindkey -s '^[=' '^uwpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+\n'
+	bindkey -s '^[+' '^uwpctl set-volume @DEFAULT_AUDIO_SINK@ 15%+\n'
+	#bindkey -s '^[^?' '^usysact\n'
+	bindkey -s '^[q' '^uexit\n'
+	#bindkey -s '^[Q' '^usysact\n'
+	#bindkey -s '^[w' '^u$BROWSER\n'
+	#bindkey -s '^[W' '^unmtui\n'
+	bindkey -s '^[e' '^uneomutt; rmdir ~/.abook 2>/dev/null\n'
+	bindkey -s '^[E' '^uabook -C ~/.config/abook/abookrc --datafile ~/.config/abook/addressbook\n'
+	bindkey -s '^[r' '^ulfub\n'
+	bindkey -s '^[R' '^uhtop\n'
+	bindkey -s '^[p' '^umpc toggle\n'
+	bindkey -s '^[P' '^umpc pause; pauseallmpv\n'
+	bindkey -s '^[[' '^umpc seek -10\n'
+	bindkey -s '^[{' '^umpc seek -60\n'
+	bindkey -s '^[]' '^umpc seek +10\n'
+	bindkey -s '^[}' '^umpc seek +60\n'
+	bindkey -s '^[D' '^upassmenu\n'
+	bindkey -s '^[c' '^uprofanity\n'
+	bindkey -s '^[n' '^unvim -c VimwikiIndex\n'
+	bindkey -s '^[N' '^unewsboat\n'
+	bindkey -s '^[m' '^uncmpcpp\n'
+	bindkey -s '^[M' '^uwpctl set-mute @DEFAULT_AUDIO_SINK@ toggle\n'
+	bindkey -s '^[,' '^umpc prev\n'
+	bindkey -s '^[<' '^umpc seek 0%\n'
+	bindkey -s '^[.' '^umpc next\n'
+	bindkey -s '^[>' '^umpc repeat\n'
+	bindkey -s '^[[2;3~' "^uxdotool type \$(grep -v '\^#' ~/.local/share/larbs/snippets | dmenu -i -l 50 | cut -d' ' -f1)\\n"
+	#bindkey -s '^[1' '^ugroff -mom /usr/local/share/dwm/larbs.mom -Tpdf | zathura -\n'
+	#bindkey -s '^[2' '^ututorialvids\n'
+	#bindkey -s '^[3' '^udisplayselect\n'
+	bindkey -s '^[4' '^upulsemixer\n'
+	#bindkey -s '^[5' '^uxrdb\n'
+	bindkey -s '^[6' '^utorwrap\n'
+	bindkey -s '^[7' '^utd-toggle\n'
+	bindkey -s '^[8' '^umailsync\n'
+	#bindkey -s '^[9' '^umounter\n'
+	#bindkey -s '^[0' '^uunmounter\n'
+fi
+
+# Disable Termux's commond-not-found handler.
+[ "$(uname -o)" = "Android" ] && unset -f command_not_found_handler
+
 # Load syntax highlighting; should be last.
-source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
+[ "$(uname -o)" != "Android" ] \
+	&& source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null \
+	|| source "$HOME"/.local/src/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
