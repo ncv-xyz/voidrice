@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# sensors wrapper for Termux
+
+printf "Core 0:   +$(termux-battery-status | grep temp | cut -d' ' -f4 | sed 's/,$//')°C\n"

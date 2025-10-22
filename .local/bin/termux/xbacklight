@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# xbacklight wrapper for Termux
+
+for i in "$@" ; do case "$i" in
+	-d*) percent="$((100 - $2))" ; shift 2 ;;
+	-[is]*) percent="$2" ; shift 2 ;;
+	*) termux-brightness ; exit ;;
+esac done
+
+brightness="$(( 255 * $percent / 100 ))"
+
+termux-brightness "$brightness"

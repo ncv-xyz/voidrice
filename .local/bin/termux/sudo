@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# wrapper for Termux/sudo
+
+case "$1" in
+	"pacman") shift && pacman "$@" ;;
+	"make") shift && make PREFIX="${PREFIX:-/usr/local}" "$@" ;;
+	"loadkeys") exit ;;
+	*) "$PREFIX"/bin/sudo "$@" ;;
+esac

@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# wireplumber wrapper for Termux
+
+getvolume() {
+	vol="$(echo "$(( $(termux-volume | grep -A 1 music | grep volume | sed 's/.*: //;s/,$//')00 / 25 ))" | sed 's/..$/.&/;s/^\./0&/')"
+	[ "$vol" = 0 ] && vol="$vol[MUTED]"
+	echo "Volume: $vol"
+}
+
+setvolume() {
+	vol="$(( 25 * ${1%\%} / 100 ))"
+	termux-volume music "$vol"
+}
+
+setmute() { termux-volume music 0 ;}
+
+case "$1" in
+	get-volume) getvolume ;;
+	set-volume) [ -z "$3" ] || setvolume "$3" ;;
+	set-mute) setmute ;;
+	set-source-mute) setmute ;;
+esac

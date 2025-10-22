@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# If first input is an option, runs mpv as usual. If not, runs
+# mimeopen instead.
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	case "$1" in
+		-*) "$PREFIX"/bin/mpv "$@" ;;
+		*) mimeopen "$1" ;;
+	esac
+else
+	"$PREFIX"/bin/mpv "$@"
+fi

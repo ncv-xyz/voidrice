@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# xdotool wrapper for Termux
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	for i in "$@" ; do case "$i" in
+		--[deglmpqrsw]) shift 2 ;;
+		-*) shift ;;
+	esac done
+	[ "$1" != "type" ] && exit 0 || shift
+	[ "$1" != "-" ] && echo "$@" || xargs -0 echo
+else
+	"$PREFIX"/bin/xdotool "$@"
+fi

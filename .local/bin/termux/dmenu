@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# dmenu wrapper for fzf
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	for i in "$@" ; do case "$i" in
+		-p) prompt="--prompt=$2" ; shift 2 ;;
+		-[lmfnsw]*) shift 2 ;;
+		-*) shift ;;
+	esac done
+	[ -z "$prompt" ] &&
+		fzf --layout=reverse --height 100% "$@" ||
+		fzf --layout=reverse --height 100% "$prompt" "$@"
+else
+	"$PREFIX"/bin/dmenu "$@"
+fi

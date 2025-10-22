@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# linkhandler wrapper for Termux
+# Opens in the default browser
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	[ -z "$1" ] && url="$(termux-clipboard-get)" || url="$1"
+	termux-open-url "$url"
+else
+	"$HOME"/.local/bin/linkhandler "$@"
+fi

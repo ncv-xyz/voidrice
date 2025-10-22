@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# notify-send wrapper for Termux
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	while getopts ":a:A:u:t:i:c:h:r:" o ; do case "${o}" in
+		[aAutichr]) ;;
+	esac done
+	shift $((OPTIND - 1))
+	termux-toast -g top -b darkgray "$@"
+else
+	"$PREFIX"/bin/notify-send "$@"
+fi

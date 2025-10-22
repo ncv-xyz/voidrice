@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# maim wrapper for Termux. Requires root.
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	which sudo || exit
+	for i in "$@" ; do case "$i" in
+		-*) shift ;;
+	esac done
+	sudo screencap "$@"
+else
+	"$PREFIX"/bin/maim $@
+fi

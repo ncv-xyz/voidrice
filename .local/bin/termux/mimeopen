@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# mimeopen wrapper for Termux
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	for i in "$@" ; do case "$i" in
+		-*) shift ;;
+	esac done
+	termux-open "$(readlink -f "$@")"
+else
+	"$PREFIX"/bin/vendor_perl/mimeopen "$@"
+fi

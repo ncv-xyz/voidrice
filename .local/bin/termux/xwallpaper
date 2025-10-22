@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# xwallpaper wrapper for Termux
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	for i in "$@" ; do case "$1" in
+		--[sto]*) shift 2 ;;
+		-*) shift ;;
+	esac done
+	termux-wallpaper -f "$1" && termux-wallpaper -l -f "$1"
+else
+	"$PREFIX"/bin/xwallpaper "$@"
+fi
