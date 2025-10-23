@@ -4,11 +4,11 @@
 
 addr="$(mmdblookup -f "$PREFIX/share/GeoIP/GeoLite2-Country.mmdb" -i "$@" country 2>/dev/null)"
 
-iso="$(echo "$addr" | grep -A 1 "\"iso_code\"" | sed -n "2p")"
+iso="$(echo "$addr" | grep -A 1 "\"iso_code\"" | tail -n 1)"
 iso="${iso#*\"}"
 iso="${iso%\"*}"
 
-name="$(echo "$addr" | grep -A 1 "\"${LANG%_*}\"" | sed -n "2p")"
+name="$(echo "$addr" | grep -A 1 "\"${LANG%_*}\"" | tail -n 1)"
 name="${name#*\"}"
 name="${name%\"*}"
 
