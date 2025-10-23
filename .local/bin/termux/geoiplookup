@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# geoiplookup wrapper for Termux.
+
+addr="$(mmdblookup -f "$PREFIX/share/GeoIP/GeoLite2-Country.mmdb" -i "$@" country 2>/dev/null)"
+
+iso="$(echo "$addr" | grep -A 1 "\"iso_code\"" | sed -n "2p")"
+iso="${iso#*\"}"
+iso="${iso%\"*}"
+
+name="$(echo "$addr" | grep -A 1 "\"${LANG%_*}\"" | sed -n "2p")"
+name="${name#*\"}"
+name="${name%\"*}"
+
+printf "%s, %s\\n" "$iso" "$name"

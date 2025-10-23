@@ -69,7 +69,6 @@ Current packages in LARBS which are unavailable in Termux:
 - unclutter
 - zathura, zathura-pdf-mupdf
 - simple-mtpfs
-- geoip
 - ~~ntp~~ (substituted for by chrony)
 - ~~urlview~~ (substituted for by urlscan)
 - youtube-viewer
