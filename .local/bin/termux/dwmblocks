@@ -29,7 +29,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		blocks="$blocks $(sb-internet)"
 		# blocks="$blocks $(sb-iplocate)"
 		blocks="$blocks $(sb-help-icon)"
-		echo "$blocks" | tr -s ' '
+		printf "%s\n" "$blocks" | tr -s " "
 	}
 blocks 2>/dev/null
 else
