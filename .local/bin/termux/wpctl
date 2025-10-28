@@ -2,22 +2,48 @@
 
 # wireplumber wrapper for Termux
 
-getvolume() {
-	vol="$(echo "$(( $(termux-volume | grep -A 1 music | grep volume | sed 's/.*: //;s/,$//')00 / 25 ))" | sed 's/..$/.&/;s/^\./0&/')"
-	[ "$vol" = 0 ] && vol="$vol[MUTED]"
-	echo "Volume: $vol"
-}
 
-setvolume() {
-	vol="$(( 25 * ${1%\%} / 100 ))"
-	termux-volume music "$vol"
-}
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 
-setmute() { termux-volume music 0 ;}
+	getvolume() {
+		vol="$(( $(termux-volume \
+			| grep -A 1 "music" | grep "volume" \
+			| cut -d":" -f2 | tr -d " ,")00 / 25 ))"
+		[ "$vol" -ge 100 ] && vol="1.0" || vol="0.${vol}"
+		[ "$vol" = "0.0" ] && vol="0[MUTED]"
+		printf "%s\n" "Volume: $vol"
+		}
 
-case "$1" in
-	get-volume) getvolume ;;
-	set-volume) [ -z "$3" ] || setvolume "$3" ;;
-	set-mute) setmute ;;
-	set-source-mute) setmute ;;
-esac
+
+	setvolume() {
+		vol="$(getvolume)"
+		vol="${vol#* }"
+		vol="${vol%[*}"
+		vol="$(( ${vol#*.} ${1#*\%} ${1%\%*} ))"
+		[ "$vol" -le 0 ] && vol=0
+		[ "$vol" -ge 100 ] && vol=100
+		termux-volume music "$(( 25 * $vol / 100 ))"
+		}
+
+	setmute() {
+		vol="$(getvolume)"
+		vol="${vol#* }"
+		vol="${vol%[*}"
+		case "$1" in
+			1) termux-volume music 0 ;;
+			toggle)
+				[ "${vol#*.}" -gt 0 ] \
+					&& termux-volume music 0
+			;;
+		esac
+		}
+
+	case "$1" in
+		get*volume) getvolume ;;
+		set*volume) [ -z "$3" ] || setvolume "$3" ;;
+		set*mute) [ -z "$3" ] || setmute "$3" ;;
+		*) printf "No valid command specified.\n" ; exit 1 ;;
+	esac
+else
+	"$PREFIX"/bin/"$0" "$@"
+fi
