@@ -9,7 +9,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		vol="$(( $(termux-volume \
 			| grep -A 1 "music" | grep "volume" \
 			| cut -d":" -f2 | tr -d " ,")00 / 25 ))"
-		[ "$vol" -ge 100 ] && vol="1.0" || vol="0.${vol}"
+		[ "$vol" -ge 100 ] && vol="1.00" || vol="0.${vol}"
 		[ "$vol" = "0.0" ] && vol="0[MUTED]"
 		printf "%s\n" "Volume: $vol"
 		}
