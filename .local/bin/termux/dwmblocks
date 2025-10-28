@@ -3,35 +3,39 @@
 # dwmblocks wrapper for Termux
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-	blocks() {
-		unset blocks
-		# blocks="$blocks ⌨ $(sb-kbselect)"
-		blocks="$blocks $(cat "$PREFIX"/tmp/recordingicon 2>/dev/null)"
-		blocks="$blocks $(sb-tasks)"
-		# blocks="$blocks $(sb-music)"
-		blocks="$blocks $(sb-pacpackages)"
-		blocks="$blocks $(sb-news)"
-		# blocks="$blocks $(sb-price xmr-btc "Monero to Bitcoin" 🔒 25)"
-		# blocks="$blocks $(sb-price xmr Monero 🔒 24)"
-		# blocks="$blocks $(sb-price eth Ethereum 🍸 23)"
-		# blocks="$blocks $(sb-price btc Bitcoin 💰 21)"
-		blocks="$blocks $(sb-torrent)"
-		# blocks="$blocks $(sb-memory)"
-		# blocks="$blocks $(sb-cpu)"
-		# blocks="$blocks $(sb-moonphase)"
-		blocks="$blocks $(sb-doppler)"
-		blocks="$blocks $(sb-forecast)"
-		blocks="$blocks $(sb-mailbox)"
-		blocks="$blocks $(sb-nettraf)"
-		blocks="$blocks $(sb-volume)"
-		blocks="$blocks $(sb-battery)"
-		blocks="$blocks $(sb-clock)"
-		blocks="$blocks $(sb-internet)"
-		# blocks="$blocks $(sb-iplocate)"
-		blocks="$blocks $(sb-help-icon)"
-		printf "%s\n" "$blocks" | tr -s " "
-	}
-blocks 2>/dev/null
+	status() {
+		unset modules
+		# modules="$modules ⌨ $(sb-kbselect)"
+		modules="$modules $(cat "$PREFIX"/tmp/recordingicon 2>/dev/null)"
+		modules="$modules $(sb-tasks)"
+		# modules="$modules $(sb-music)"
+		modules="$modules $(sb-pacpackages)"
+		modules="$modules $(sb-news)"
+		# modules="$modules $(sb-price xmr-btc "Monero to Bitcoin" 🔒 25)"
+		# modules="$modules $(sb-price xmr Monero 🔒 24)"
+		# modules="$modules $(sb-price eth Ethereum 🍸 23)"
+		# modules="$modules $(sb-price btc Bitcoin 💰 21)"
+		modules="$modules $(sb-torrent)"
+		# modules="$modules $(sb-memory)"
+		# modules="$modules $(sb-cpu)"
+		# modules="$modules $(sb-moonphase)"
+		modules="$modules $(sb-doppler)"
+		modules="$modules $(sb-forecast)"
+		modules="$modules $(sb-mailbox)"
+		modules="$modules $(sb-nettraf)"
+		modules="$modules $(sb-volume)"
+		modules="$modules $(sb-battery)"
+		modules="$modules $(sb-clock)"
+		modules="$modules $(sb-internet)"
+		# modules="$modules $(sb-iplocate)"
+		modules="$modules $(sb-help-icon)"
+		printf "%s\n" "$modules" | tr -s " "
+		}
+	while :; do
+		status 2>/dev/null
+		sleep 1m &
+		wait
+	done
 else
 	"$PREFIX"/bin/dwmblocks "$@"
 fi
