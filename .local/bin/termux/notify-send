@@ -3,11 +3,13 @@
 # notify-send wrapper for Termux
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	foreground="$(grep "_normal" -A 2 "${XDG_CONFIG_DIR:-$HOME/.config}"/dunst/dunstrc | grep "fore" | cut -d'"' -f2)"
+	background="$(grep "_normal" -A 2 "${XDG_CONFIG_DIR:-$HOME/.config}"/dunst/dunstrc | grep "back" | cut -d'"' -f2)"
 	while getopts ":a:A:u:t:i:c:h:r:" o ; do case "${o}" in
 		[aAutichr]) ;;
 	esac done
 	shift $((OPTIND - 1))
-	termux-toast -g top -b darkgray "$@"
+	termux-toast -g top -c "$foreground" -b "$background" "$@"
 else
 	"$PREFIX"/bin/notify-send "$@"
 fi
