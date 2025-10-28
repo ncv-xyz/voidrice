@@ -1,9 +1,1 @@
-#!/bin/sh
-
-# LibreWolf wrapper for Termux. Opens in the default browser.
-
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-	termux-open-url "$@"
-else
-	"$PREFIX"/lib/librewolf/librewolf %u
-fi
+linkhandler
