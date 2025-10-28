@@ -38,7 +38,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		termux-reload-settings
 	else
 		[ -f "$dunstconf.bak" ] && unlink "$dunstconf" && mv "$dunstconf.bak" "$dunstconf"
-		[ -f "$termuxconf.bak" ] && rm "$termuxconf" && mv "$termuxconf.bak" "$termuxconf"
+		[ -f "$termuxconf.bak" ] && rm "$termuxconf" && mv "$termuxconf.bak" "$termuxconf" && termux-reload-settings
 	fi
 	termux-wallpaper -f "$bgloc" >/dev/null 2>&1
 	termux-wallpaper -l -f "$bgloc" >/dev/null 2>&1
