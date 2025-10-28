@@ -18,7 +18,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	setvolume() {
 		vol="$(getvolume)"
 		vol="${vol#* }"
-		vol="${vol%[*}"
+		vol="${vol%[*]}"
 		vol="$(( ${vol#*.} ${1#*\%} ${1%\%*} ))"
 		[ "$vol" -le 0 ] && vol=0
 		[ "$vol" -ge 100 ] && vol=100
@@ -28,7 +28,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	setmute() {
 		vol="$(getvolume)"
 		vol="${vol#* }"
-		vol="${vol%[*}"
+		vol="${vol%[*]}"
 		case "$1" in
 			1) termux-volume music 0 ;;
 			toggle)
