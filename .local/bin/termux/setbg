@@ -1,0 +1,48 @@
+#!/bin/sh
+
+# setbg script wrapper for Termux.
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	bgloc="${XDG_DATA_HOME:-$HOME/.local/share}/bg"
+	dunstconf="${XDG_CONFIG_HOME:-$HOME/.config}/dunst/dunstrc"
+	termuxconf="${XDG_CONFIG_HOME:-$HOME/.config}/termux/colors.properties"
+	while getopts "s" o; do case "${o}" in
+		s) silent='1' ;;
+	esac done
+	shift $((OPTIND - 1))
+	trueloc="$(readlink -f "$1")" &&
+		case "$(file --mime-type -b "$trueloc")" in
+			image/* )
+				ln -sf "$trueloc" "$bgloc" \
+					&& [ -z "$silent" ] \
+					&& notify-send "Changing wallpaper..."
+				;;
+			inode/directory )
+				ln -sf "$(find "$trueloc" -iregex '.*.\(jpg\|jpeg\|png\|gif\)' -type f | shuf -n 1)" "$bgloc" \
+					&& [ -z "$silent" ] \
+					&& notify-send "Random Wallpaper chosen."
+				;;
+			*)
+				[ -z "$silent" ] \
+					&& notify-send "🖼️ Error: not a valid image or directory."
+				exit 1
+				;;
+		esac
+	if command -v wal >/dev/null 2>&1 ; then
+		wal -n -i "$(readlink -f $bgloc)" >/dev/null 2>&1
+	mkdir -p "${dunstconf%/*}" "${termuxconf%/*}"
+		mv -n "$dunstconf" "$dunstconf.bak"
+		mv -n "$termuxconf" "$termuxconf.bak"
+		ln -sf "${XDG_CACHE_HOME:-$HOME/.cache}/wal/dunstrc" "$dunstconf"
+		xargs sh -c 'printf "color0:     %s\ncolor1:     %s\ncolor2:     %s\ncolor3:     %s\ncolor4:     %s\ncolor5:     %s\ncolor6:     %s\ncolor7:     %s\ncolor8:     %s\ncolor9:     %s\ncolor10:    %s\ncolor11:    %s\ncolor12:    %s\ncolor13:    %s\ncolor14:    %s\ncolor15:    %s\n#background: %s\nforeground: %s\ncursor:     %s\n" "${0}" "${1}" "${2}" "${3}" "${4}" "${3}" "${6}" "${7}" "${8}" "${9}" "${10}" "${11}" "${12}" "${13}" "${14}" "${15}" "${0}" "${7}" "${7}"' < "${XDG_CACHE_HOME:-$HOME/.cache}/wal/colors" > "$termuxconf"
+		termux-reload-settings
+	else
+		[ -f "$dunstconf.bak" ] && unlink "$dunstconf" && mv "$dunstconf.bak" "$dunstconf"
+		[ -f "$termuxconf.bak" ] && rm "$termuxconf" && mv "$termuxconf.bak" "$termuxconf"
+	fi
+	termux-wallpaper -f "$bgloc" >/dev/null 2>&1
+	termux-wallpaper -l -f "$bgloc" >/dev/null 2>&1
+
+else
+	"$HOME"/.local/bin/setbg "$@"
+fi
