@@ -20,8 +20,8 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		vol="${vol#* }"
 		vol="${vol%[*]}"
 		vol="$(( ${vol#*.} ${1#*\%} ${1%\%*} ))"
-		[ "$vol" -le 0 ] && vol=0
-		[ "$vol" -ge 100 ] && vol=100
+		[ "$vol" -le 0 ] && vol='0'
+		[ "$vol" -ge 100 ] && vol='100'
 		termux-volume music "$(( 25 * $vol / 100 ))"
 		}
 
