@@ -3,7 +3,7 @@
 # maim wrapper for Termux. Requires root.
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-	command -v sudo >/dev/null 2>&1 || exit
+	command -v sudo >/dev/null 2>&1 || exit 1
 	for i in "$@" ; do case "$i" in
 		-*) shift ;;
 	esac done
