@@ -32,7 +32,7 @@ Also try out [mutt-wizard](https://github.com/lukesmithxyz/mutt-wizard), which
 additionally works with this setup. It gives you an easy-to-install
 terminal-based email client regardless of your email provider. It is
 integrated into these dotfiles as well. Check out my
-[patches to make it work in Termux](https://github.com/ncv-xyz/mutt-wizard).
+[fork to make it work in Termux](https://github.com/ncv-xyz/mutt-wizard).
 
 ## Install these dotfiles and all dependencies
 
