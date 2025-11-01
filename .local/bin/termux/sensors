@@ -2,4 +2,4 @@
 
 # sensors wrapper for Termux
 
-printf "Core 0:   +$(termux-battery-status | grep temp | cut -d' ' -f4 | sed 's/,$//')°C\n"
+printf "%s\n" "Core 0:   +$(termux-battery-status | grep temp | cut -d' ' -f4 | sed 's/,$//')°C"
