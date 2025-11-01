@@ -2,9 +2,9 @@
 
 # Enable colors and change prompt:
 autoload -U colors && colors	# Load colors
-[ "$(uname -o)" != "Android" ] \
-	&& PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b " \
-	|| PS1="%B%{$fg[red]%}[%{$fg[yellow]%}${USER:-$USERNAME}%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+[ "$(uname -o)" = "Android" ] &&
+	PS1="%B%{$fg[red]%}[%{$fg[yellow]%}${USER:-$USERNAME}%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b " ||
+	PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b " \
 setopt autocd		# Automatically cd into typed directory.
 stty stop undef		# Disable ctrl-s to freeze terminal.
 setopt interactive_comments
@@ -125,10 +125,10 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	#bindkey -s '^[0' '^uunmounter\n'
 fi
 
-# Disable Termux's commond-not-found handler.
+# Disable Termux's command-not-found handler.
 [ "$(uname -o)" = "Android" ] && unset -f command_not_found_handler
 
 # Load syntax highlighting; should be last.
-[ "$(uname -o)" != "Android" ] \
-	&& source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null \
-	|| source "$HOME"/.local/src/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
+[ "$(uname -o)" = "Android" ] &&
+	source "$HOME"/.local/src/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null ||
+	source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
