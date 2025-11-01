@@ -3,6 +3,7 @@
 # passmenu wrapper for Termux
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	which pass >/dev/null || exit 1
 	[ "$1" = "--type" ] && typeit="true"
 	prefix=${PASSWORD_STORE_DIR:-$HOME/.password-store}
 	for i in $(ls "$PASSWORD_STORE_DIR"); do
