@@ -56,7 +56,7 @@ I haven't tested LARBS with it in Termux, nor setup everything here to work
 right with it. But if you comment out the lines `SSH_TTY` and `GPG_TTY` in
 `~/.zprofile`, everything should work.
 
-Current packages in LARBS which are unavailable in Termux:
+Current packages for LARBS which are unavailable in Termux:
 
 - xorg-xinit, xorg-xset (substituted for by termux-x11?)
 - otf-libertinus, ttf-font-awesome
