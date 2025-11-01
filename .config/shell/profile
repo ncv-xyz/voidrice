@@ -76,22 +76,24 @@ sudo -n loadkeys "$XDG_DATA_HOME/larbs/ttymaps.kmap" 2>/dev/null
 if [ "$(uname -o)" = "Android" ]; then
 	# Prepend wrappers to $PATH.
 	export PATH="$HOME/.local/bin/termux:$PATH"
-	# Pretend to be SSH (for lfub) and fix GPG.
-	export SSH_TTY="$(tty)"
-	export GPG_TTY="$(tty)"
-	# Fix "pager: not found" error.
-	export PAGER="less"
-	# Autostart these programs.
-	autostart="mpd"
-	for program in $autostart; do
-		pidof -sx "$program" || "$program"
-	done >/dev/null 2>&1
 	# Set host and user names.
 	export HOST="$(getprop ro.product.device)"
 	export HOSTNAME="$HOST"
 	export USER="larbs" # Set username here.
 	export USERNAME="$USER"
 	export LOGNAME="$USER"
+	# Pretend to be SSH (for lfub) and fix GPG.
+	export SSH_TTY="$(tty)"
+	export GPG_TTY="$(tty)"
+	# Fix "pager: not found" error.
+	export PAGER="less"
+	# Fix ncmpcpp: No such file or directory
+	export MPD_HOST="localhost"
+	# Autostart these programs.
+	autostart="mpd"
+	for program in $autostart; do
+		pidof -sx "$program" || "$program"
+	done >/dev/null 2>&1
 	# Start tmux on user's current tty if not already running.
 	#[ "$(tty)" = "/dev/pts/0" ] && ! pidof -s tmux >/dev/null 2>&1 && exec tmux
 fi
