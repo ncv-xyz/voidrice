@@ -1,8 +1,8 @@
-# The Voidrice (patch of Luke Smith <https://lukesmith.xyz>'s dotfiles)
+# The Voidrice (fork of Luke Smith <https://lukesmith.xyz>'s dotfiles)
 
-These are patched dotfiles deployed by [LARBS](https://larbs.xyz) and as seen
-on [Luke Smith's YouTube channel](https://youtube.com/c/lukesmithxyz) to make
-them work in [Termux](https://github.com/termux/termux-app).
+This is a fork of the dotfiles deployed by [LARBS](https://larbs.xyz) and as
+seen on [Luke Smith's YouTube channel](https://youtube.com/c/lukesmithxyz) to
+make them work in [Termux](https://github.com/termux/termux-app).
 
 - Very useful scripts are in `~/.local/bin/`
 - Settings for:
