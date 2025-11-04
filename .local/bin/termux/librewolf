@@ -1,1 +1,17 @@
-linkhandler
+#!/bin/sh
+
+# librewolf wrapper for Termux.
+# Opens in the default browser.
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	[ -z "$1" ] && url="$(termux-clipboard-get)" || url="$1"
+	case "$url" in
+		*inv.nadeko.net*)
+			url="http://inv.nadekonw7plitnjuawu6ytjsl7jlglk2t6pyq6eftptmiv3dvqndwvyd.onion/${url#*://inv.nadeko.net/}" ;;
+		*nt.vern.cc*)
+			url="http://nt.vernccvbvyi5qhfzyqengccj7lkove6bjot2xhh5kajhwvidqafczrad.onion/${url#*://nt.vern.cc/}" ;;
+	esac
+	termux-open-url "$url"
+else
+	"$HOME"/.local/bin/linkhandler "$@"
+fi
