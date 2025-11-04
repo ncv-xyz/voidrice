@@ -1,12 +1,26 @@
 #!/bin/sh
 
-# If first input is an option, runs mpv as usual.
-# If not, runs mimeopen instead.
+# mpv wrapper script for Termux.
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	for var in "$@" ; do case "$var" in
+		-*) ;;
+		*) args="$args $var" ;;
+	esac done
+	set -- "${args# }"
+	# If input is a URL, follow it in the mpv app.
 	case "$1" in
-		--audio-display=no) "$PREFIX"/bin/mpv "$@" ;;
-		*) mimeopen "$1" ;;
+		http://*|https://*)
+			cmd package list packages 2>/dev/null | grep "is.xyz.mpv" >/dev/null ||
+				{ printf "mpv-android must be installed to open links.\n" ; exit 1 ;}
+			am start -n is.xyz.mpv/.MPVActivity -a android.intent.action.VIEW \
+				-d "$(yt-dlp -f "best[ext=mp4]" -g "$1" 2>/dev/null)" >/dev/null
+			exit ;;
+	esac
+	# Open audio files as usual but open video files in an app.
+	case "$(file --mime-type "$(readlink -f "$1")" -b)" in
+		audio/*|video/x-ms-asf) "$PREFIX"/bin/mpv "$@" ;;
+		video/*) mimeopen "$1" ;;
 	esac
 else
 	"$PREFIX"/bin/mpv "$@"
