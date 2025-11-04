@@ -6,7 +6,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	for i in "$@" ; do case "$i" in
 		-*) shift ;;
 	esac done
-	termux-open "$(readlink -f "$@")"
+	termux-share -t "$1" -d "$(readlink -f "$1")"
 else
 	"$PREFIX"/bin/vendor_perl/mimeopen "$@"
 fi
