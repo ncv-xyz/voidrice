@@ -3,10 +3,12 @@
 # mimeopen wrapper for Termux
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-	for i in "$@" ; do case "$i" in
-		-*) shift ;;
+	for var in "$@" ; do case "$var" in
+		-*) ;;
+		*) args="$args $var" ;;
 	esac done
-	termux-share -t "$1" -d "$(readlink -f "$1")"
+	set -- "${args# }"
+	termux-share -t "$1" -d "$1"
 else
 	"$PREFIX"/bin/vendor_perl/mimeopen "$@"
 fi
