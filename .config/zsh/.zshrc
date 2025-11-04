@@ -2,9 +2,7 @@
 
 # Enable colors and change prompt:
 autoload -U colors && colors	# Load colors
-[ "$(uname -o)" = "Android" ] &&
-	PS1="%B%{$fg[red]%}[%{$fg[yellow]%}${USER:-$USERNAME}%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b " ||
-	PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b " \
+PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
 setopt autocd		# Automatically cd into typed directory.
 stty stop undef		# Disable ctrl-s to freeze terminal.
 setopt interactive_comments
@@ -80,7 +78,10 @@ bindkey -M vicmd '^[[P' vi-delete-char
 bindkey -M vicmd '^e' edit-command-line
 bindkey -M visual '^[[P' vi-delete
 
-# LARBS dwm binds in tty.
+# Load syntax highlighting; should be last.
+source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
+
+# LARBS dwm binds for tty.
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	bindkey -s '^[`' '^udmenuunicode\n'
 	bindkey -s '^[-' '^uwpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-\n'
@@ -125,10 +126,12 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	#bindkey -s '^[0' '^uunmounter\n'
 fi
 
-# Disable Termux's command-not-found handler.
-[ "$(uname -o)" = "Android" ] && unset -f command_not_found_handler
-
-# Load syntax highlighting; should be last.
-[ "$(uname -o)" = "Android" ] &&
-	source "$HOME"/.local/src/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null ||
-	source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
+# Termux
+if [ "$(uname -o)" = "Android" ]; then
+	# Set prompt username to $USER.
+	PS1="%B%{$fg[red]%}[%{$fg[yellow]%}${USER:-$USERNAME}%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+	# Disable Termux's command-not-found handler.
+	unset -f command_not_found_handler
+	# Load syntax highlighting in ~/.local/src.
+	source "$HOME"/.local/src/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
+fi
