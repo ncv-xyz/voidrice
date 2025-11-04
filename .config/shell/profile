@@ -88,7 +88,7 @@ if [ "$(uname -o)" = "Android" ]; then
 	# Fix "pager: not found" error.
 	export PAGER="less"
 	# Fix ncmpcpp: No such file or directory.
-	export MPD_HOST="localhost"
+	export MPD_HOST="${MPD_HOST:-localhost}"
 	# Autostart these programs.
 	autostart="mpd"
 	for program in $autostart; do
