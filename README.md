@@ -61,7 +61,6 @@ Current packages for LARBS which are unavailable in Termux:
 - xorg-xinit, xorg-xset (substituted for by termux-x11?)
 - otf-libertinus, ttf-font-awesome
 - ueberzugpp
-- arandr (substituted for by termux-x11?)
 - exfat-utils
 - noto-fonts, noto-fonts-emoji
 - wireplumber, pipewire-pulse (substituted for by pipewire?)
@@ -72,5 +71,6 @@ Current packages for LARBS which are unavailable in Termux:
 - ~~ntp~~ (substituted for by chrony)
 - ~~urlview~~ (substituted for by urlscan)
 - youtube-viewer
+- libreoffice
 
 Some are unlisted and substituted for by symlinks or scripts.
