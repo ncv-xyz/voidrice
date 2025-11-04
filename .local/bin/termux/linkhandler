@@ -1,11 +1,24 @@
 #!/bin/sh
 
-# linkhandler wrapper for Termux
-# Opens in the default browser
+# linkhandler wrapper for Termux.
+
+# If an image or document, it will view with mimeopen,
+# if a video, it will view in mpv,
+# if a music file, it will queue for download,
+# otherwise it opens the link in browser.
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	[ -z "$1" ] && url="$(termux-clipboard-get)" || url="$1"
-	termux-open-url "$url"
+	case "$url" in
+		*mkv|*webm|*mp4|*youtube.com/watch*|*youtube.com/playlist*|*youtube.com/shorts*|*youtu.be*|*hooktube.com*|*bitchute.com*|*videos.lukesmith.xyz*|*odysee.com*)
+			setsid -f mpv -quiet "$url" >/dev/null 2>&1 ;;
+		*png|*jpg|*jpe|*jpeg|*gif|*webp|*pdf|*cbz|*cbr)
+			curl -sL "$url" > "$PREFIX/tmp/$(echo "$url" | sed "s/.*\///;s/%20/ /g")" && mimeopen "$PREFIX/tmp/$(echo "$url" | sed "s/.*\///;s/%20/ /g")" >/dev/null 2>&1 & ;;
+		*mp3|*flac|*opus|*mp3?source*)
+			qndl "$url" 'curl -LO'  >/dev/null 2>&1 ;;
+		*)
+			[ -f "$url" ] && setsid -f "$TERMINAL" -e "$EDITOR" "$url" >/dev/null 2>&1 || setsid -f "$BROWSER" "$url" >/dev/null 2>&1
+	esac
 else
 	"$HOME"/.local/bin/linkhandler "$@"
 fi
