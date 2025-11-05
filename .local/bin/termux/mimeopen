@@ -8,7 +8,9 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		*) args="$args $var" ;;
 	esac done
 	set -- "${args# }"
-	termux-share -t "$1" -d "$1"
+	[ -z "$1" ] &&
+		xargs sh -c 'termux-share -t "$1" -d "$1"' ||
+		termux-share -t "$1" -d "$1"
 else
 	"$PREFIX"/bin/vendor_perl/mimeopen "$@"
 fi
