@@ -12,8 +12,8 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	file="$1"
 	[ -z "$ask" ] || { termux-share "$file" ; exit ;}
 	[ -z "$1" ] &&
-		xargs sh -c 'termux-share -t "$file" -d "$file"' ||
-		termux-share -t "$file" -d "$file"
+		xargs sh -c 'termux-share -d "$file"' ||
+		termux-share -d "$file"
 else
 	"$PREFIX"/bin/vendor_perl/mimeopen "$@"
 fi
