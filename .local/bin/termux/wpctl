@@ -42,7 +42,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		get*volume) getvolume ;;
 		set*volume) [ -z "$3" ] || setvolume "$3" ;;
 		set*mute) [ -z "$3" ] || setmute "$3" ;;
-		*) printf "No valid command specified.\n" ; exit 1 ;;
+		*) printf "No valid command specified.\\n" ; exit 1 ;;
 	esac
 else
 	"$PREFIX"/bin/"$0" "$@"
