@@ -58,16 +58,19 @@ right with it. But if you comment out the lines `SSH_TTY` and `GPG_TTY` in
 
 Current packages for LARBS which are unavailable in Termux:
 
-- xorg-xinit, xorg-xset (substituted for by termux-x11?)
+- xorg-xinit, xorg-xset, xorg-xbacklight
 - otf-libertinus, ttf-font-awesome
-- ueberzugpp
-- exfat-utils
 - noto-fonts, noto-fonts-emoji
-- wireplumber, pipewire-pulse (substituted for by pipewire?)
-- ~~man-db~~ (substituted for by mandoc)
-- unclutter
+- ueberzugpp
 - zathura, zathura-pdf-mupdf
+- ~~man-db~~ (substituted for by mandoc)
+- pipewire-pulse, wireplumber
+- exfat-utils
 - simple-mtpfs
+- polkit
+- unclutter
+- maim
+- slock
 - ~~ntp~~ (substituted for by chrony)
 - ~~urlview~~ (substituted for by urlscan)
 - youtube-viewer
