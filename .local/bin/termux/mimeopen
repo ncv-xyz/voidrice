@@ -4,13 +4,16 @@
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	for var in "$@" ; do case "$var" in
+		--ask) ask='1' ;;
 		-*) ;;
 		*) args="$args $var" ;;
 	esac done
 	set -- "${args# }"
+	file="$1"
+	[ -z "$ask" ] || { termux-share "$file" ; exit ;}
 	[ -z "$1" ] &&
-		xargs sh -c 'termux-share -t "$1" -d "$1"' ||
-		termux-share -t "$1" -d "$1"
+		xargs sh -c 'termux-share -t "$file" -d "$file"' ||
+		termux-share -t "$file" -d "$file"
 else
 	"$PREFIX"/bin/vendor_perl/mimeopen "$@"
 fi
