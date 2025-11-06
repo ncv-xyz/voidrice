@@ -22,11 +22,13 @@ make them work in [Termux](https://github.com/termux/termux-app).
 
 ## Usage
 
-These dotfiles and installer are intended to go with a
-[pacman install of Termux](https://wiki.termux.com/wiki/Switching_package_manager).
+These dotfiles and installer are intended to be used with a
+[pacman install of Termux](https://wiki.termux.com/wiki/Switching_package_manager)
+and [API commands](https://github.com/termux/termux-api) available.
 
 - [Termux](https://github.com/termux)
 - [Termux Pacman](https://github.com/termux-pacman)
+- [Termux:API](https://github.com/termux/termux-api)
 
 Also try out [mutt-wizard](https://github.com/lukesmithxyz/mutt-wizard), which
 additionally works with this setup. It gives you an easy-to-install
