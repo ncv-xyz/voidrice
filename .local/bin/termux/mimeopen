@@ -1,10 +1,10 @@
 #!/bin/sh
 
-# mimeopen wrapper for Termux
+# mimeopen wrapper for Termux.
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	for var in "$@" ; do case "$var" in
-		--ask) ask='1' ;;
+		-a|--ask) ask='1' ;;
 		-*) ;;
 		*) args="$args $var" ;;
 	esac done
