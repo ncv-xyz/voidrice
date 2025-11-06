@@ -63,7 +63,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		--color=bg+:${dmenu_sb:-#005577} \
 		--color=marker:${out_bg:-#00ffff}"
 
-	[ "${0##*/}" = "dmenu_run" ] && echo -n "$PATH" | xargs -d : -I {} find {} -maxdepth 1 -executable -type f -printf "%P\n" | sort -u | fzf | xargs setsid -f >/dev/null 2>&1 ; exit
+	[ "${0##*/}" = "dmenu_run" ] && { echo -n "$PATH" | xargs -d : -I {} find {} -maxdepth 1 -executable -type f -printf "%P\n" | sort -u | fzf | xargs setsid -f >/dev/null 2>&1 ; exit ;}
 
 	fzf --prompt="$prompt" "$@"
 else
