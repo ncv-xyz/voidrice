@@ -1,11 +1,11 @@
 #!/bin/sh
 
-# xclip wrapper for Termux
+# xclip wrapper for Termux.
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	for i in "$@" ; do case "$i" in
-		-o) termux-clipboard-get && exit ;;
-		-*[dlst]*) shift 2 ;;
+		-o*) termux-clipboard-get && exit ;;
+		-[dlst]*) shift 2 ;;
 		-*) shift ;;
 	esac done
 	termux-clipboard-set "$@"

@@ -1,13 +1,16 @@
 #!/bin/sh
 
-# xbacklight wrapper for Termux
+# xbacklight wrapper for Termux.
 
-for i in "$@" ; do case "$i" in
-	-d*) percent="$((100 - $2))" ; shift 2 ;;
-	-[is]*) percent="$2" ; shift 2 ;;
-	*) termux-brightness ; exit ;;
-esac done
-
-brightness="$(( 255 * $percent / 100 ))"
-
-termux-brightness "$brightness"
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	for i in "$@" ; do case "$i" in
+		-de*) brightness="$((100 - $2))" ; shift 2 ;;
+		-i*|-se*) brightness="$2" ; shift 2 ;;
+		-[hg]*) shift ;;
+		-*) shift 2 ;;
+	esac ; done
+	[ -z "$brightness" ] && { termux-brightness ; exit 1 ;}
+	termux-brightness "$(( 255 * $brightness / 100 ))"
+else
+	"$PREFIX"/bin/xbacklight "$@"
+fi
