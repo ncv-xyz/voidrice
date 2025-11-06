@@ -24,7 +24,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 				;;
 			*)
 				[ -z "$silent" ] \
-					&& notify-send "🖼️ Error: not a valid image or directory."
+					&& notify-send "🖼️ Error" "Not a valid image or directory."
 				exit 1
 				;;
 		esac

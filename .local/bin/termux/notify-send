@@ -9,7 +9,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		[aAutichr]) ;;
 	esac done
 	shift $((OPTIND - 1))
-	termux-toast -g top -c "$colorfg" -b "$colorbg" "$@"
+	termux-toast -g top -c "$colorfg" -b "$colorbg" "$(printf "%s\n%s" "$1" "$2")"
 else
 	"$PREFIX"/bin/notify-send "$@"
 fi
