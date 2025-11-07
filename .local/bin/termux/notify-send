@@ -3,13 +3,54 @@
 # notify-send wrapper for Termux
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-	colorfg="$(grep "_normal" -A 2 "${XDG_CONFIG_DIR:-$HOME/.config}"/dunst/dunstrc | grep "foreground" | cut -d'"' -f2)"
-	colorbg="$(grep "_normal" -A 2 "${XDG_CONFIG_DIR:-$HOME/.config}"/dunst/dunstrc | grep "background" | cut -d'"' -f2)"
-	while getopts ":a:A:u:t:i:c:h:r:" o ; do case "${o}" in
-		[aAutichr]) ;;
-	esac done
-	shift $((OPTIND - 1))
-	termux-toast -g top -c "$colorfg" -b "$colorbg" "$(printf "%s\n%s" "$1" "$2")"
+	for i in "$@" ; do case "$i" in
+		-u|--u*) urgency="$2" ; shift 2 ;;
+		-[aAtichr]|--[aticr]*|--hi*) shift 2 ;;
+		-?|--h*) exit ;;
+		-*) shift ;;
+	esac ; done
+	[ -z "$1" ] && exit
+
+	# dunst transparency
+	transparency="$(grep "transparency" \
+		"${XDG_CONFIG_DIR:-$HOME/.config}/dunst/dunstrc" |
+		cut -d" " -f7)"
+	[ "$transparency" -gt 0 ] >/dev/null 2>&1 &&
+		transparency="$(echo \
+		$(( $(echo $(( 100 - $transparency )) |
+		rev | cut -c2- | rev) * 255 )) |
+		rev | cut -c2- | rev)"
+	[ "$transparency" -lt 10 ] >/dev/null 2>&1 &&
+		transparency="0$transparency"
+	[ "$transparency" -gt 16 ] >/dev/null 2>&1 &&
+		transparency="$(echo \
+		"$(echo $(( $(echo $(( $(echo \
+		$(( ${transparency}0000 / 16 )) |
+		rev |
+		cut -c5- |
+		rev)0000 / 16 )) |
+		tail -c5) * 16 )) |
+		rev | cut -c5- | rev)" \
+		"$(echo $(( $(echo \
+		$(( ${transparency}0000 / 16 )) |
+		tail -c5) * 16 )) |
+		rev | cut -c5- | rev)" |
+		sed "s/10/a/;s/11/b/;s/12/c/;s/13/d/;s/14/e/;s/15/f/;s/ //")"
+
+	# dunst colors
+	foreground="$(grep "_${urgency:-normal}" -A 2 \
+		"${XDG_CONFIG_DIR:-$HOME/.config}/dunst/dunstrc" |
+		grep "foreground" | cut -d'"' -f2)"
+	foreground="#${transparency}${foreground#\#}"
+
+	background="$(grep "_${urgrncy:-normal}" -A 2 \
+		"${XDG_CONFIG_DIR:-$HOME/.config}/dunst/dunstrc" |
+		grep "background" | cut -d'"' -f2)"
+	background="#${transparency}${background#\#}"
+
+	termux-toast -g top \
+		-c "$foreground" -b "$background" \
+		"$(printf "%s\n%s" "$1" "$2")"
 else
 	"$PREFIX"/bin/notify-send "$@"
 fi
