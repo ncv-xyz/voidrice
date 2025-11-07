@@ -3,34 +3,35 @@
 # dwmblocks wrapper for Termux
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-	status() {
-		unset modules
-		# modules="$modules ⌨ $(sb-kbselect)"
-		modules="$modules $(cat "$PREFIX"/tmp/recordingicon 2>/dev/null)"
-		modules="$modules $(sb-tasks)"
-		# modules="$modules $(sb-music)"
-		modules="$modules $(sb-pacpackages)"
-		modules="$modules $(sb-news)"
-		# modules="$modules $(sb-price xmr-btc "Monero to Bitcoin" 🔒 25)"
-		# modules="$modules $(sb-price xmr Monero 🔒 24)"
-		# modules="$modules $(sb-price eth Ethereum 🍸 23)"
-		# modules="$modules $(sb-price btc Bitcoin 💰 21)"
-		modules="$modules $(sb-torrent)"
-		# modules="$modules $(sb-memory)"
-		# modules="$modules $(sb-cpu)"
-		# modules="$modules $(sb-moonphase)"
-		modules="$modules $(sb-doppler)"
-		modules="$modules $(sb-forecast)"
-		modules="$modules $(sb-mailbox)"
-		modules="$modules $(sb-nettraf)"
-		modules="$modules $(sb-volume)"
-		modules="$modules $(sb-battery)"
-		modules="$modules $(sb-clock)"
-		modules="$modules $(sb-internet)"
-		# modules="$modules $(sb-iplocate)"
-		modules="$modules $(sb-help-icon)"
-		printf "%s\n" "$modules" | tr -s " "
+	modules() {
+		# sb-kbselect
+		#cat "$PREFIX"/tmp/recordingicon 2>/dev/null
+		sb-tasks
+		# sb-music
+		sb-pacpackages
+		sb-news
+		# sb-price xmr-btc "Monero to Bitcoin" 🔒 25
+		# sb-price xmr Monero 🔒 24
+		# sb-price eth Ethereum 🍸 23
+		# sb-price btc Bitcoin 💰 21
+		sb-torrent
+		# sb-memory
+		# sb-cpu
+		# sb-moonphase
+		sb-doppler
+		sb-forecast
+		sb-mailbox
+		#sb-nettraf
+		sb-volume
+		sb-battery
+		sb-clock
+		sb-internet
+		# sb-iplocate
+		sb-help-icon
 		}
+	status() {
+		printf "%s\n" "$(modules | tr "\\n" " ")" | tr -s " "
+	}
 	while :; do
 		status 2>/dev/null
 		sleep 1m &
