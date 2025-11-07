@@ -89,7 +89,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	bindkey -s '^[=' '^uwpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+\n'
 	bindkey -s '^[+' '^uwpctl set-volume @DEFAULT_AUDIO_SINK@ 15%+\n'
 	bindkey -s '^[^?' '^usysact\n'
-	bindkey -s '^[q' '^uexit\n'
+	bindkey -s '^[q' '^ukill $PPID\n'
 	bindkey -s '^[Q' '^usysact\n'
 	bindkey -s '^[w' '^u$BROWSER\n'
 	#bindkey -s '^[W' '^unmtui\n'
