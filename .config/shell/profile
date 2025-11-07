@@ -95,5 +95,5 @@ if [ "$(uname -o)" = "Android" ]; then
 		pidof -sx "$program" || "$program"
 	done >/dev/null 2>&1
 	# Start tmux on user's current tty if not already running.
-	#[ "$(tty)" = "/dev/pts/0" ] && ! pidof -s tmux >/dev/null 2>&1 && exec tmux
+	[ "$(tty)" = "/dev/pts/0" ] && ! pidof -s tmux >/dev/null 2>&1 && exec tmux
 fi
