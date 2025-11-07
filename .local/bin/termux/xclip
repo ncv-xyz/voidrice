@@ -4,11 +4,17 @@
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	for i in "$@" ; do case "$i" in
-		-o*) termux-clipboard-get && exit ;;
-		-[dlst]*) shift 2 ;;
+		-h*|-vers*) exit ;;
+		-o*) clip="out" ;;
+		-f*) filter="$2" ; shift 2 ;;
+		-[sltd]*) shift 2 ;;
 		-*) shift ;;
 	esac done
-	termux-clipboard-set "$@"
+	case "${clip:-in}" in
+		in) termux-clipboard-set "$@" ;;
+		out) termux-clipboard-get ; exit ;;
+	esac
+	[ -z "$filter" ] || echo "$@"
 else
 	"$PREFIX"/bin/xclip "$@"
 fi

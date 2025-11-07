@@ -5,10 +5,15 @@
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	[ "$1" = "type" ] && shift || exit 0
 	for i in "$@" ; do case "$i" in
-		--[deglmpqrsw]*) shift 2 ;;
+		--f*) file='1' ; shift ;;
+		--[wd*]) shift 2 ;;
 		-*) shift ;;
 	esac done
-	[ "$1" = "-" ] && xargs -0 echo || echo "$@"
+	[ -z "$file" ] && args="$@"
+	[ -n "$file" ] && { [ -n "$1" ] &&
+		file="$(cat "$1")" ||
+		file="$(xargs cat)" ;}
+	termux-clipboard-set "${args:-$file}"
 else
 	"$PREFIX"/bin/xdotool "$@"
 fi
