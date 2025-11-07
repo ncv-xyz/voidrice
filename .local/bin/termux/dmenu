@@ -7,21 +7,19 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	for i in "$@" ; do case "$i" in
 		-b) export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --layout=default" ; shift ;;
 		-i) export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS -i" ; shift ;;
-		-l) export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --height=100%" ; shift 2 ;;
 		-p) prompt="$2" ; shift 2 ;;
 		-f) shift ;;
 		-nb) dmenu_nb="$2" ; shift 2 ;;
 		-nf) dmenu_nf="$2" ; shift 2 ;;
 		-sb) dmenu_sb="$2" ; shift 2 ;;
 		-sf) dmenu_sf="$2" ; shift 2 ;;
-		-[mw]) shift 2 ;;
+		-[lmw]) shift 2 ;;
 		-*) exit ;;
 	esac done
 	export FZF_DEFAULT_OPTS="--no-info --no-separator --no-scrollbar \
 		--prompt=\"\" --gutter=\" \" --pointer=\"\" --ellipsis=\"\" \
 		--preview-window=\"\" --highlight-line --no-hscroll --raw \
-		--reverse --height=~40% +i --cycle \
-		--bind=change:best ${FZF_DEFAULT_OPTS# }"
+		--reverse +i --bind=change:best ${FZF_DEFAULT_OPTS# }"
 	# dmenu keybinds
 	export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
 		--bind=tab:yank,ctrl-i:yank \
