@@ -2,6 +2,8 @@
 
 # geoiplookup wrapper for Termux.
 
+command -v mmdblookup >/dev/null 2>&1 || exit 1
+
 addr="$(mmdblookup -f "$PREFIX/share/GeoIP/GeoLite2-Country.mmdb" -i "$@" country 2>/dev/null)"
 
 iso="$(echo "$addr" | grep -A 1 "\"iso_code\"" | tail -n 1)"
