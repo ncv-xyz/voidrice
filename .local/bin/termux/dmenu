@@ -1,25 +1,35 @@
 #!/bin/sh
 
-# dmenu wrapper for fzf
+# dmenu wrapper for fzf.
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-	unset FZF_DEFAULT_OPTS
 	for i in "$@" ; do case "$i" in
-		-b) export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --layout=default" ; shift ;;
-		-i) export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS -i" ; shift ;;
+		-b) layout="default" ; shift ;;
+		-i) case="-i" ; shift ;;
+		-l) height="$(( $2 + 1))" ; shift 2 ;;
 		-p) prompt="$2" ; shift 2 ;;
 		-f) shift ;;
-		-nb) dmenu_nb="$2" ; shift 2 ;;
-		-nf) dmenu_nf="$2" ; shift 2 ;;
-		-sb) dmenu_sb="$2" ; shift 2 ;;
-		-sf) dmenu_sf="$2" ; shift 2 ;;
-		-[lmw]) shift 2 ;;
+		-nb) color_nb="$2" ; shift 2 ;;
+		-nf) color_nf="$2" ; shift 2 ;;
+		-sb) color_sb="$2" ; shift 2 ;;
+		-sf) color_sf="$2" ; shift 2 ;;
+		-[mw]) shift 2 ;;
 		-*) exit ;;
 	esac done
+
+	[ -t 0 ] || items="$(xargs -0)\\n"
+	height="${height:-$(echo -n "$items" | wc -l)}"
+	[ "$height" -gt "$(tput lines)" ] && tmux_height="$(tput lines)"
+	[ "$height" -eq 0 ] && { height="100%" ; tmux_height="40%" ;}
+
+	# dmenu format
 	export FZF_DEFAULT_OPTS="--no-info --no-separator --no-scrollbar \
-		--prompt=\"\" --gutter=\" \" --pointer=\"\" --ellipsis=\"\" \
-		--preview-window=\"\" --highlight-line --no-hscroll --raw \
-		--reverse +i --bind=change:best ${FZF_DEFAULT_OPTS# }"
+		--prompt='$prompt' --gutter=' ' --pointer='' --ellipsis='' \
+		--highlight-line --no-hscroll --raw --border=none \
+		--layout=${layout:-reverse} --height=$height \
+		--tmux=top,100%,${tmux_height:-$height} ${case:-+i} \
+		--preview-window='' --bind=change:best"
+
 	# dmenu keybinds
 	export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
 		--bind=tab:yank,ctrl-i:yank \
@@ -34,36 +44,45 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		--bind=ctrl-b:up,ctrl-p:up,alt-h:up \
 		--bind=ctrl-d:delete-char \
 		--bind=ctrl-e:last,alt-G:last \
-		--bind=ctrl-f:down,ctrl-n:down,alt-l:down
+		--bind=ctrl-f:down,ctrl-n:down,alt-l:down \
 		--bind=ctrl-h:backward-delete-char \
 		--bind=ctrl-k:kill-word \
 		--bind=ctrl-u:kill-line \
 		--bind=ctrl-w:backward-kill-word \
 		--bind=alt-j:page-down \
 		--bind=alt-k:page-up"
+
 	# wal colors
 	wal_dmenu="${XDG_CACHE_DIR:-$HOME/.cache}/wal/colors-wal-dmenu.h"
-	if [ -f "$wal_dmenu" ]; then
-		dmenu_nb="${dmenu_nb:-$(grep "SchemeNorm" "$wal_dmenu" | cut -d'"' -f4)}"
-		dmenu_nf="${dmenu_nf:-$(grep "SchemeNorm" "$wal_dmenu" | cut -d'"' -f2)}"
-		dmenu_sb="${dmenu_sb:-$(grep "SchemeSel" "$wal_dmenu" | cut -d'"' -f4)}"
-		dmenu_sf="${dmenu_sf:-$(grep "SchemeSel" "$wal_dmenu" | cut -d'"' -f2)}"
-		out_bg="$(grep "SchemeOut" "$wal_dmenu" | cut -d'"' -f4)"
-		out_fg="$(grep "SchemeOut" "$wal_dmenu" | cut -d'"' -f2)"
+	if [ command -v wal >/dev/null 2>&1 ] && [ -f "$wal_dmenu" ]; then
+		color_nb="${color_nb:-$(grep "SchemeNorm" "$wal_dmenu" | cut -d'"' -f4)}"
+		color_nf="${color_nf:-$(grep "SchemeNorm" "$wal_dmenu" | cut -d'"' -f2)}"
+		color_sb="${color_sb:-$(grep "SchemeSel" "$wal_dmenu" | cut -d'"' -f4)}"
+		color_sf="${color_sf:-$(grep "SchemeSel" "$wal_dmenu" | cut -d'"' -f2)}"
+		color_ob="$(grep "SchemeOut" "$wal_dmenu" | cut -d'"' -f4)"
+		color_of="$(grep "SchemeOut" "$wal_dmenu" | cut -d'"' -f2)"
 	fi
+
 	# dmenu colors
 	export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
-		--color=list-fg:${dmenu_nf:-#bbbbbb},hl:${dmenu_nf:-#bbbbbb} \
-		--color=prompt:${dmenu_nf:-#bbbbbb}:regular \
+		--color=list-fg:${color_nf:-#bbbbbb},hl:${color_nf:-#bbbbbb} \
+		--color=prompt:${color_nf:-#bbbbbb}:regular \
 		--color=nomatch:regular \
-		--color=list-bg:${dmenu_nb:-#222222} \
-		--color=fg+:${dmenu_sf:-#eeeeee},hl+:${dmenu_sf:-#eeeeee} \
-		--color=bg+:${dmenu_sb:-#005577} \
-		--color=marker:${out_bg:-#00ffff}"
+		--color=list-bg:${color_nb:-#222222} \
+		--color=fg+:${color_sf:-#eeeeee},hl+:${color_sf:-#eeeeee} \
+		--color=bg+:${color_sb:-#005577} \
+		--color=marker:${color_ob:-#00ffff}"
 
-	[ "${0##*/}" = "dmenu_run" ] && { echo -n "$PATH" | xargs -d : -I {} find {} -maxdepth 1 -executable -type f -printf "%P\n" | sort -u | fzf | xargs setsid -f >/dev/null 2>&1 ; exit ;}
+	if [ "${0##*/}" = "dmenu_run" ]; then
+		cachedir="${XDG_CACHE_HOME:-$HOME/.cache}"
+		cache="$cachedir/dmenu_run"
+		[ ! -d "$cachedir" ] && mkdir -p "$cachedir"
+		echo -n "$PATH" | xargs -d":" -I {} find {} -maxdepth 1 -executable -type f -printf "%P\n" | tee "$cache" >/dev/null 2>&1
+		cat "$cache" | sort -u | fzf | xargs setsid -f >/dev/null 2>&1
+	else
+		echo "$items" | fzf
+	fi
 
-	fzf --prompt="$prompt" "$@"
 else
 	"$PREFIX"/bin/dmenu "$@"
 fi
