@@ -9,11 +9,10 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		--[wd*]) shift 2 ;;
 		-*) shift ;;
 	esac done
-	[ -z "$file" ] && args="$@"
-	[ -n "$file" ] && { [ -n "$1" ] &&
-		file="$(cat "$1")" ||
-		file="$(xargs cat)" ;}
-	termux-clipboard-set "${args:-$file}"
+	[ -z "$file" ] || file="$(cat "${1:-$([ -t 0 ] || xargs)}")"
+	input="${file:-${@:-$([ -t 0 ] || xargs)}}"
+	[ -z "$input" ] && exit
+	termux-clipboard-set "$input"
 else
 	"$PREFIX"/bin/xdotool "$@"
 fi
