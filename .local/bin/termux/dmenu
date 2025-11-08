@@ -73,6 +73,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		--color=nomatch:regular \
 		--color=list-bg:${color_nb:-#222222} \
 		--color=fg+:${color_sf:-#eeeeee},hl+:${color_sf:-#eeeeee} \
+		--color=query:${color_sf:-#eeeeee} \
 		--color=bg+:${color_sb:-#005577} \
 		--color=marker:${color_ob:-#00ffff}"
 
