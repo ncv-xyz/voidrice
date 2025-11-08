@@ -26,14 +26,13 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	[ "$transparency" -gt 16 ] >/dev/null 2>&1 &&
 		transparency="$(echo \
 		"$(echo $(( $(echo $(( $(echo \
-		$(( ${transparency}0000 / 16 )) |
-		rev |
-		cut -c5- |
-		rev)0000 / 16 )) |
+		$((transparency * 10000 / 16 )) |
+		rev | cut -c5- | rev) \
+		* 10000 / 16 )) |
 		tail -c5) * 16 )) |
 		rev | cut -c5- | rev)" \
 		"$(echo $(( $(echo \
-		$(( ${transparency}0000 / 16 )) |
+		$((transparency * 10000 / 16 )) |
 		tail -c5) * 16 )) |
 		rev | cut -c5- | rev)" |
 		sed "s/10/a/;s/11/b/;s/12/c/;s/13/d/;s/14/e/;s/15/f/;s/ //")"

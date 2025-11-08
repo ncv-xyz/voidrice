@@ -6,7 +6,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	for i in "$@" ; do case "$i" in
 		-b) layout="default" ; shift ;;
 		-i) case="-i" ; shift ;;
-		-l) height="$(( $2 + 1))" ; shift 2 ;;
+		-l) height="$2" ; shift 2 ;;
 		-p) prompt="$2" ; shift 2 ;;
 		-f) shift ;;
 		-nb) color_nb="$2" ; shift 2 ;;
@@ -17,9 +17,10 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		-*) exit ;;
 	esac done
 
-	[ -t 0 ] || items="$(xargs -0)\\n"
+	[ -t 0 ] || items="$(xargs -0)"
 	height="${height:-$(echo -n "$items" | wc -l)}"
-	[ "$height" -gt "$(tput lines)" ] && tmux_height="$(tput lines)"
+	height="$((height + 1))"
+	[ "$height" -gt "$(tput lines)" ] && height="100%"
 	[ "$height" -eq 0 ] && { height="100%" ; tmux_height="40%" ;}
 
 	# dmenu format
