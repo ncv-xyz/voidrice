@@ -19,9 +19,11 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 
 	[ -t 0 ] || items="$(xargs -0)"
 	height="${height:-$(echo -n "$items" | wc -l)}"
-	height="$((height + 1))"
-	[ "$height" -gt "$(tput lines)" ] && height="100%"
-	[ "$height" -eq 0 ] && { height="100%" ; tmux_height="40%" ;}
+	case 1 in
+		$((height > $(tput lines))) ) height="100%" ;;
+		$((height < 1)) ) height="100%" ; tmux_height="40%" ;;
+		* ) height="$((height + 1))" ;;
+	esac
 
 	# dmenu format
 	export FZF_DEFAULT_OPTS="--no-info --no-separator --no-scrollbar \
