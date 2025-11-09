@@ -57,7 +57,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 			0.*) new_vol="${new_vol#*.}" ;;
 		esac
 		new_vol="${new_vol#0}"
-		[ -z "$op" ] && vol="$new_vol" || vol="$((vol $op $new_vol))"
+		[ -z "$op" ] && vol="$new_vol" || vol="$((vol op new_vol))"
 		case 1 in
 			$((vol >= 100)) ) vol="100" ;;
 			$((vol <= 0)) ) vol="0" ;;

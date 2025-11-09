@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# notify-send wrapper for Termux
+# notify-send wrapper for Termux.
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	for i in "$@" ; do case "$i" in
@@ -16,26 +16,15 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		transparency="$(grep "transparency" \
 		"${XDG_CONFIG_DIR:-$HOME/.config}/dunst/dunstrc" |
 		cut -d" " -f7)"
-	[ "$transparency" -gt 0 ] >/dev/null 2>&1 &&
-		transparency="$(echo \
-		$(( $(echo $(( 100 - $transparency )) |
-		rev | cut -c2- | rev) * 255 )) |
-		rev | cut -c2- | rev)"
-	[ "$transparency" -lt 10 ] >/dev/null 2>&1 &&
-		transparency="0$transparency"
-	[ "$transparency" -gt 16 ] >/dev/null 2>&1 &&
-		transparency="$(echo \
-		"$(echo $(( $(echo $(( $(echo \
-		$((transparency * 10000 / 16 )) |
-		rev | cut -c5- | rev) \
-		* 10000 / 16 )) |
-		tail -c5) * 16 )) |
-		rev | cut -c5- | rev)" \
-		"$(echo $(( $(echo \
-		$((transparency * 10000 / 16 )) |
-		tail -c5) * 16 )) |
-		rev | cut -c5- | rev)" |
-		sed "s/10/a/;s/11/b/;s/12/c/;s/13/d/;s/14/e/;s/15/f/;s/ //")"
+	transparency="${transparency:-0}"
+	transparency="$(((100 - transparency) * 255 / 100))"
+	case 1 in
+		$((transparency < 10)) ) transparency="0$transparency" ;;
+		$((transparency > 16)) )
+			transparency="$((transparency / 16)) $((transparency * 10000 / 16 % 10000 * 16 / 10000))"
+			pattern="s/10/a/;s/11/b/;s/12/c/;s/13/d/;s/14/e/;s/15/f/;s/ //"
+			transparency="$(echo "$transparency" | sed "$pattern")" ;;
+	esac
 
 	# dunst colors
 	[ -f "${XDG_CONFIG_DIR:-$HOME/.config}/dunst/dunstrc" ] &&
