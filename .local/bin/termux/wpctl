@@ -44,20 +44,21 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 			1.*) vol="1${vol#*.}" ;;
 			0.*) vol="${vol#*.}" ;;
 		esac
+		vol="${vol#0}"
 		case "$2" in
 			*.*%|*[+-][+-]) err ;;
 			*+) op="+" ;;
 			*-) op="-" ;;
 		esac
-		new_vol="${2%$op}"
-		new_vol="${new_vol%\%}"
-		case "$new_vol" in
-			1.*) new_vol="1${new_vol#*.}" ;;
-			*.[1-9]) new_vol="${new_vol#*.}0" ;;
-			0.*) new_vol="${new_vol#*.}" ;;
+		newvol="${2%$op}"
+		newvol="${newvol%\%}"
+		case "$newvol" in
+			1.*) newvol="1${newvol#*.}" ;;
+			*.[1-9]) newvol="${newvol#*.}0" ;;
+			0.*) newvol="${newvol#*.}" ;;
 		esac
-		new_vol="${new_vol#0}"
-		[ -z "$op" ] && vol="$new_vol" || vol="$((vol op new_vol))"
+		newvol="${newvol#0}"
+		[ -z "$op" ] && vol="$newvol" || vol="$((vol $op newvol))"
 		case 1 in
 			$((vol >= 100)) ) vol="100" ;;
 			$((vol <= 0)) ) vol="0" ;;
