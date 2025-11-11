@@ -18,11 +18,11 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	esac done
 
 	[ -t 0 ] || items="$(xargs -0)"
-	height="${height:-$(echo "$items" | wc -l)}"
+	height="${height:-$(echo -n "$items" | wc -l)}"
 	case 1 in
 		$((height > $(tput lines))) ) height="100%" ;;
 		$((height < 1)) ) height="100%" ; tmux_height="40%" ;;
-		* ) height="$((height + 1))" ;;
+		* ) height="$((height + 2))" ;;
 	esac
 
 	# dmenu format
