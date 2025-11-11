@@ -18,7 +18,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	esac done
 
 	[ -t 0 ] || items="$(xargs -0)"
-	height="${height:-$(echo -n "$items" | wc -l)}"
+	height="${height:-$(echo "$items" | wc -l)}"
 	case 1 in
 		$((height > $(tput lines))) ) height="100%" ;;
 		$((height < 1)) ) height="100%" ; tmux_height="40%" ;;
@@ -57,7 +57,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 
 	# wal colors
 	wal_dmenu="${XDG_CACHE_DIR:-$HOME/.cache}/wal/colors-wal-dmenu.h"
-	if [ command -v wal >/dev/null 2>&1 ] && [ -f "$wal_dmenu" ]; then
+	if command -v wal >/dev/null 2>&1 && [ -f "$wal_dmenu" ]; then
 		color_nb="${color_nb:-$(grep "SchemeNorm" "$wal_dmenu" | cut -d'"' -f4)}"
 		color_nf="${color_nf:-$(grep "SchemeNorm" "$wal_dmenu" | cut -d'"' -f2)}"
 		color_sb="${color_sb:-$(grep "SchemeSel" "$wal_dmenu" | cut -d'"' -f4)}"
@@ -73,7 +73,7 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		--color=nomatch:regular \
 		--color=list-bg:${color_nb:-#222222} \
 		--color=fg+:${color_sf:-#eeeeee},hl+:${color_sf:-#eeeeee} \
-		--color=query:${color_sf:-#eeeeee} \
+		--color=query:${color_nf:-#bbbbbb} \
 		--color=bg+:${color_sb:-#005577} \
 		--color=marker:${color_ob:-#00ffff}"
 
