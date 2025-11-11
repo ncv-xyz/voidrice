@@ -73,7 +73,7 @@ export _JAVA_AWT_WM_NONREPARENTING=1      # Fix for Java applications in dwm
 sudo -n loadkeys "$XDG_DATA_HOME/larbs/ttymaps.kmap" 2>/dev/null
 
 # Termux
-if [ "$(uname -o)" = "Android" ]; then
+if [ -n "$TERMUX_VERSION" ]; then
 	# Prepend wrappers to $PATH.
 	export PATH="$HOME/.local/bin/termux:$PATH"
 	# Set host and user names.
