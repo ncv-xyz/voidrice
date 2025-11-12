@@ -77,17 +77,17 @@ if [ -n "$TERMUX_VERSION" ]; then
 	# Prepend wrappers to $PATH.
 	export PATH="$HOME/.local/bin/termux:$PATH"
 	# Set host and user names.
-	export HOST="$(getprop ro.product.device)"
-	export HOSTNAME="$HOST"
 	export USER="larbs" # Set username here.
+	export HOST="$(getprop ro.product.device)" # Set hostname here.
+	export HOSTNAME="$HOST"
 	export USERNAME="$USER"
 	export LOGNAME="$USER"
 	# Pretend to be SSH (for lfub) and fix GPG.
 	export SSH_TTY="$(tty)"
 	export GPG_TTY="$(tty)"
-	# Fix "pager: not found" error.
+	# Fix "pager: not found"
 	export PAGER="less"
-	# Fix ncmpcpp: No such file or directory.
+	# Fix "ncmpcpp: No such file or directory"
 	export MPD_HOST="${MPD_HOST:-localhost}"
 	# Autostart these programs.
 	autostart="mpd"
