@@ -26,10 +26,10 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		"Pass -h after a command to see command-specific options" ; exit ;}
 	getvolume() {
 		[ -z "$1" ] && err
-		vol="$(( $(termux-volume |
-			grep -A 1 "music" | grep "volume" |
-			cut -d":" -f2 | tr -d " ,") \
-			* 100 / 25 ))"
+		vol="$(termux-volume | grep -A 1 "music" | grep "volume")"
+		vol="${vol##* }"
+		vol="${vol%,}"
+		vol="$((vol * 100 / 25 ))"
 		case 1 in
 			$((vol >= 100)) ) vol="1.00" ;;
 			$((vol >= 10)) ) vol="0.$vol" ;;

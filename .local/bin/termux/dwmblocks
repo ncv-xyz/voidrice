@@ -30,10 +30,12 @@ if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 		sb-help-icon
 		}
 	status() {
-		printf "%s\n" "$(modules | tr "\\n" " ")" | tr -s " "
+		status="$(modules | tr "\n" " ")"
+		set -- $status; status="$*"
+		echo "$status" 2>/dev/null
 	}
 	while :; do
-		status 2>/dev/null
+		status
 		sleep 1m &
 		wait
 	done
