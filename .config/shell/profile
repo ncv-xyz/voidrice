@@ -90,10 +90,10 @@ if [ -n "$TERMUX_VERSION" ]; then
 	# Fix "ncmpcpp: No such file or directory"
 	export MPD_HOST="${MPD_HOST:-localhost}"
 	# Autostart these programs.
-	autostart="mpd"
+	#autostart="mpd"
 	for program in $autostart; do
 		pidof -sx "$program" || "$program"
 	done >/dev/null 2>&1
 	# Start tmux on user's current tty if not already running.
-	[ "$(tty)" = "/dev/pts/0" ] && ! pidof -s tmux >/dev/null 2>&1 && exec tmux
+	#[ "$(tty)" = "/dev/pts/0" ] && ! pidof -s tmux >/dev/null 2>&1 && exec tmux
 fi
