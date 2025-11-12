@@ -3,7 +3,7 @@
 # xwallpaper wrapper for Termux.
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-	for i in "$@" ; do case "$i" in
+	for o in $@ ; do case "$o" in
 		--[cdnv]*) shift ;;
 		--[sofmtz]*|--ce*) shift 2 ;;
 	esac ; done

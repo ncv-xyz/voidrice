@@ -3,7 +3,7 @@
 # notify-send wrapper for Termux.
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-	for i in "$@" ; do case "$i" in
+	for o in $@ ; do case "$o" in
 		-u|--u*) urgency="$2" ; shift 2 ;;
 		-[aAtichr]|--[aticr]*|--hi*) shift 2 ;;
 		-?|--h*) exit ;;

@@ -4,7 +4,7 @@
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
 	[ "$1" = "type" ] && shift || exit 0
-	for i in "$@" ; do case "$i" in
+	for o in $@ ; do case "$o" in
 		--f*) file='1' ; shift ;;
 		--[wd*]) shift 2 ;;
 		-*) shift ;;

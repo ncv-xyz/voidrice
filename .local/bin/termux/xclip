@@ -3,7 +3,7 @@
 # xclip wrapper for Termux.
 
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-	for i in "$@" ; do case "$i" in
+	for o in $@ ; do case "$o" in
 		-h*|-vers*) exit ;;
 		-o*) clip="out" ;;
 		-f*) filter="$2" ; shift 2 ;;
