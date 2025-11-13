@@ -21,6 +21,7 @@ Plug 'tpope/vim-commentary'
 Plug 'ap/vim-css-color'
 call plug#end()
 
+set notermguicolors
 set title
 set bg=light
 set mouse=a
