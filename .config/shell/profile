@@ -89,6 +89,8 @@ if [ -n "$TERMUX_VERSION" ]; then
 	export PAGER="less"
 	# Fix "ncmpcpp: No such file or directory"
 	export MPD_HOST="${MPD_HOST:-localhost}"
+	# Keep Termux running in the background.
+	termux-wake-lock
 	# Autostart these programs.
 	#autostart="mpd"
 	for program in $autostart; do
