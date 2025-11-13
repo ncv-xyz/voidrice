@@ -31,7 +31,6 @@ set noshowmode
 set noruler
 set laststatus=0
 set noshowcmd
-set notermguicolors
 colorscheme vim
 
 " Some basics:
