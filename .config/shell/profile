@@ -89,13 +89,11 @@ if [ -n "$TERMUX_VERSION" ]; then
 	export PAGER="less"
 	# Fix "ncmpcpp: No such file or directory"
 	export MPD_HOST="${MPD_HOST:-localhost}"
-	# Keep Termux running in the background.
-	termux-wake-lock
 	# Autostart these programs.
 	#autostart="mpd"
-	for program in $autostart; do
-		pidof -sx "$program" || "$program"
-	done >/dev/null 2>&1
+	#for program in $autostart; do
+	#	pidof -sx "$program" || "$program"
+	#done >/dev/null 2>&1
 	# Start tmux on user's current tty if not already running.
-	#[ "$(tty)" = "/dev/pts/0" ] && ! pidof -s tmux >/dev/null 2>&1 && exec tmux
+	#[ "$(tty)" = "/dev/pts/0" ] && ! pidof -s tmux >/dev/null 2>&1 && { termux-wake-lock ; exec tmux }
 fi
