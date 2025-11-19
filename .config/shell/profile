@@ -95,5 +95,5 @@ if [ -n "$TERMUX_VERSION" ]; then
 		pidof -sx "$program" || "$program"
 	done >/dev/null 2>&1
 	# Start tmux on user's current tty if not already running.
-	#[ -z "$TMUX" ] && { unset ZDOTDIR ; exec tmux new-session -A -s $USER >/dev/null 2>&1 ;}
+	[ -z "$TMUX" ] && { unset ZDOTDIR ; exec tmux new-session -A -s $USER >/dev/null 2>&1 ;}
 fi
