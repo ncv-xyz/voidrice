@@ -13,7 +13,7 @@ ifinstalled pass pass-otp || exit 1
 
 dir="${PASSWORD_STORE_DIR}"
 
-choice="$({ echo "🆕add" ; echo "🕙sync-time" ; find "$dir" -type f -iname '*-otp.gpg' ;} | sed "s/.*\///;s/-otp.gpg//" | dmenu -p "Pick a 2FA:")"
+choice="$({ echo "🆕add" ; echo "🕙sync-time" ; find "$dir" -type f -iname '*-otp.gpg' ;} | sed "s|^$dir/||;s|-otp.gpg$||" | dmenu -p "Pick a 2FA:")"
 
 case $choice in
 	🆕add )
