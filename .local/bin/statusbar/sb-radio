@@ -1,0 +1,28 @@
+#!/bin/sh
+
+case $BLOCK_BUTTON in
+	1) setsid -f dmenuradio ;;
+	2) dmenuradio togglemute ;;
+	3) notify-send "📻 Radio module" "\- Shows currently playing radio station.
+- Middle click to mute." ;;
+	6) "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac
+
+radiopid="$(cat /tmp/radio-pid)"
+
+[ -S "/tmp/mpvSockets/$radiopid" ] || exit
+
+title="$(echo '{ "command": ["get_property_string", "media-title"] }' \
+	| socat - "UNIX-CONNECT:/tmp/mpvSockets/$radiopid" 2>&1)"
+title="${title#*:\"}"
+title="${title%%\",*}"
+
+
+mutestate="$(echo '{ "command": ["get_property", "mute"] }' \
+	| socat - "UNIX-CONNECT:/tmp/mpvSockets/$radiopid" 2>&1)"
+mutestate="${mutestate#*:}"
+mutestate="${mutestate%%,*}"
+
+[ "$mutestate" = true ] && muted=" 🔇"
+
+[ -z "$title" ] || printf "📻 %s%s\n" "$title" "$muted"
