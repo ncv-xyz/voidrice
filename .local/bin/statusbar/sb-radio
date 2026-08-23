@@ -9,20 +9,22 @@ case $BLOCK_BUTTON in
 esac
 
 radiopid="$(cat /tmp/radio-pid)"
-
 [ -S "/tmp/mpvSockets/$radiopid" ] || exit
 
-title="$(echo '{ "command": ["get_property_string", "media-title"] }' \
-	| socat - "UNIX-CONNECT:/tmp/mpvSockets/$radiopid" 2>&1)"
-title="${title#*:\"}"
-title="${title%%\",*}"
+title="$(echo '{ "command": ["get_property", "metadata/by-key/icy-title"] }' \
+	| socat - "UNIX:CONNECT:/tmp/mpvSockets/$radiopid" 2>/dev/null)"
 
+[ -z "$title" ] && title="$(echo '{ "command": ["get_property", "media-title"] }' \
+	| socat - "UNIX-CONNECT:/tmp/mpvSockets/$radiopid" 2>/dev/null)"
+
+title="${title#*:\"}"
+title="${title%%\"*}"
 
 mutestate="$(echo '{ "command": ["get_property", "mute"] }' \
-	| socat - "UNIX-CONNECT:/tmp/mpvSockets/$radiopid" 2>&1)"
+	| socat - "UNIX-CONNECT:/tmp/mpvSockets/$radiopid" 2>/dev/null)"
 mutestate="${mutestate#*:}"
 mutestate="${mutestate%%,*}"
 
 [ "$mutestate" = true ] && muted=" 🔇"
 
-[ -z "$title" ] || printf "📻 %s%s\n" "$title" "$muted"
+printf "📻 %s%s\n" "$title" "$muted"

@@ -8,7 +8,13 @@ radiopid="$(cat /tmp/radio-pid)"
 pkill -RTMIN+28 "${STATUSBAR:-dwmblocks}"; exit ;}
 
 [ -S "/tmp/mpvSockets/$radiopid" ] && {
-	response=$(printf "No\nYes" | dmenu -i -p "Stop playing radio?")
+	station="$(echo '{ "command": ["get_property", "metadata/by-key/icy-name"] }' \
+		| socat - "UNIX-CONNECT:/tmp/mpvSockets/$radiopid" 2>/dev/null)"
+	[ -z "$station" ] && station="$(echo '{ "command": ["get_property", "media-title"] }' \
+		| socat - "UNIX-CONNECT:/tmp/mpvSockets/$radiopid" 2>/dev/null)"
+	station="${station#*:\"}"
+	station="${station%%\"*}"
+	response=$(printf "No\nYes" | dmenu -i -p "$station: Stop radio?")
 	[ "$response" = "Yes" ] && {
 		kill "$radiopid"
 		rm -f /tmp/radio-pid
@@ -21,5 +27,6 @@ chosen=$(dmenu -p "Radio:" -i -l 10 <"$stations")
 [ -z "$chosen" ] && exit
 
 mpv "$chosen" >/dev/null 2>&1 &
+
 echo $! >/tmp/radio-pid; sleep .1
 pkill -RTMIN+28 "${STATUSBAR:-dwmblocks}"
