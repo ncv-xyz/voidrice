@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Plays a radio station stream from ~/.local/share/radio-list
+
+# Requires mpv and socat.
+
 stations="${XDG_DATA_HOME:-$HOME/.local/share}/radio-list"
 radiopid="$(cat /tmp/radio-pid)"
 
