@@ -5,7 +5,7 @@
 # Requires mpv and socat.
 
 stations="${XDG_DATA_HOME:-$HOME/.local/share}/radio-list"
-radiopid="$(cat /tmp/radio-pid)"
+read -r radiopid </tmp/radio-pid
 
 [ "$1" = togglemute ] && { echo '{"command":["cycle","mute"]}' \
 	| socat - "UNIX-CONNECT:/tmp/mpvSockets/$radiopid" >/dev/null 2>&1

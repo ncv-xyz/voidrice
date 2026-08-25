@@ -13,7 +13,7 @@ case $BLOCK_BUTTON in
 	6) "$TERMINAL" -e "$EDITOR" "$0" ;;
 esac
 
-radiopid="$(cat /tmp/radio-pid)"
+read -r radiopid </tmp/radio-pid
 [ -S "/tmp/mpvSockets/$radiopid" ] || exit
 
 title="$(echo '{ "command": ["get_property", "metadata/by-key/icy-title"] }' \
