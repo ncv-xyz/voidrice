@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Mounts Android Phones and USB drives (encrypted or not). This script will
 # replace the older `dmenumount` which had extra steps and couldn't handle
@@ -12,15 +12,14 @@ IFS='
 escape(){ echo "$@" | iconv -cf UTF-8 -t ASCII//TRANSLIT | tr -d '[:punct:]' | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | sed "s/-\+/-/g;s/\(^-\|-\$\)//g" ;}
 
 # Check for phones.
-phones="$(simple-mtpfs -l 2>/dev/null | sed "s/^/📱/")"
 mountedphones="$(grep "simple-mtpfs" /etc/mtab)"
 # If there are already mounted phones, remove them from the list of mountables.
-[ -n "$mountedphones" ] && phones="$(for phone in $phones; do
-	for mounted in $mountedphones; do
-		escphone="$(escape "$phone")"
-		[[ "$mounted" =~ "$escphone" ]] && break 1
-	done && continue 1
-	echo "$phone"
+phones="$(simple-mtpfs -l 2>/dev/null | while read -r phone; do
+	escphone="$(escape "$phone")"
+	case "$mountedphones" in
+		*"$escphone"* ) ;;
+		* ) echo "📱$phone" ;;
+	esac
 done)"
 
 # Check for drives.
