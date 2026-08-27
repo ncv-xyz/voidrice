@@ -17,13 +17,16 @@ read -r radiopid </tmp/radio-pid
 [ -S "/tmp/mpvSockets/$radiopid" ] || exit
 
 title="$(echo '{ "command": ["get_property", "metadata/by-key/icy-title"] }' \
-	| socat - "UNIX:CONNECT:/tmp/mpvSockets/$radiopid" 2>/dev/null)"
-
-[ -z "$title" ] && title="$(echo '{ "command": ["get_property", "media-title"] }' \
 	| socat - "UNIX-CONNECT:/tmp/mpvSockets/$radiopid" 2>/dev/null)"
 
+case "$title" in
+	*'"property not found"'*|*'"property unavailable"'* )
+		title="$(echo '{ "command": ["get_property", "media-title"] }' \
+		| socat - "UNIX-CONNECT:/tmp/mpvSockets/$radiopid" 2>/dev/null)" ;;
+esac
+
 title="${title#*:\"}"
-title="${title%%\"*}"
+title="${title%%\",*}"
 
 mutestate="$(echo '{ "command": ["get_property", "mute"] }' \
 	| socat - "UNIX-CONNECT:/tmp/mpvSockets/$radiopid" 2>/dev/null)"

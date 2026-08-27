@@ -14,8 +14,11 @@ pkill -RTMIN+28 "${STATUSBAR:-dwmblocks}"; exit ;}
 [ -S "/tmp/mpvSockets/$radiopid" ] && {
 	station="$(echo '{ "command": ["get_property", "metadata/by-key/icy-name"] }' \
 		| socat - "UNIX-CONNECT:/tmp/mpvSockets/$radiopid" 2>/dev/null)"
-	[ -z "$station" ] && station="$(echo '{ "command": ["get_property", "media-title"] }' \
-		| socat - "UNIX-CONNECT:/tmp/mpvSockets/$radiopid" 2>/dev/null)"
+	case "$station" in
+		*'"property not found"'*|*'"property unavailable"'* )
+			station="$(echo '{ "command": ["get_property", "media-title"] }' \
+			| socat - "UNIX-CONNECT:/tmp/mpvSockets/$radiopid" 2>/dev/null)"
+	esac
 	station="${station#*:\"}"
 	station="${station%%\"*}"
 	response=$(printf "No\nYes" | dmenu -i -p "$station: Stop radio?")
