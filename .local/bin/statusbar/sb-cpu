@@ -9,9 +9,11 @@ case $BLOCK_BUTTON in
 	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
 esac
 
-sensors="$(sensors)"
-temp="${sensors#* [-+]}"
-sign="${sensors%"$temp"}"
-temp="${sign##* }${temp%% *}"
-
-printf "🌡 %s\n" "$temp"
+sensors | while read -r sensor; do case "$sensor" in
+	*Package*|*Core*|*Tctl* )
+		temp="${sensor#* [-+]}"
+		sign="${sensor%"$temp"}"
+		temp="${sign##* }${temp%% *}"
+		printf "🌡 %s\n" "$temp"
+		break ;;
+esac done
